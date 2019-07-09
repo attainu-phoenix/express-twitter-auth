@@ -1,17 +1,13 @@
 'use strict';
 
-//mongoose file must be loaded before all other files in order to provide
-// models to other modules
-var mongoose = require('./mongoose'),
-  passport = require('passport'),
-  express = require('express'),
+var express = require('express'),
   jwt = require('jsonwebtoken'),
   expressJwt = require('express-jwt'),
   router = express.Router(),
   cors = require('cors'),
   bodyParser = require('body-parser'),
   request = require('request'),
-  twitterConfig = require('./twitter.config.js');
+  config = require('./config.js');
 
 mongoose();
 
@@ -68,8 +64,8 @@ router.route('/auth/twitter/reverse')
       url: 'https://api.twitter.com/oauth/request_token',
       oauth: {
         oauth_callback: "http%3A%2F%2Flocalhost%3A3000%2Ftwitter-callback",
-        consumer_key: twitterConfig.consumerKey,
-        consumer_secret: twitterConfig.consumerSecret
+        consumer_key: config.consumerKey,
+        consumer_secret: config.consumerSecret
       }
     }, function (err, r, body) {
       if (err) {
@@ -87,8 +83,8 @@ router.route('/auth/twitter')
     request.post({
       url: `https://api.twitter.com/oauth/access_token?oauth_verifier`,
       oauth: {
-        consumer_key: twitterConfig.consumerKey,
-        consumer_secret: twitterConfig.consumerSecret,
+        consumer_key: config.consumerKey,
+        consumer_secret: config.consumerSecret,
         token: req.query.oauth_token
       },
       form: { oauth_verifier: req.query.oauth_verifier }

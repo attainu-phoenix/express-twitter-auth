@@ -1,0 +1,19 @@
+{
+  "name": "express-twitter-auth",
+  "version": "1.0.0",
+  "description": "Simple express backend for twitter auth",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/attainu-phoenix/express-twitter-auth.git"
+  },
+  "author": "Ansal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/attainu-phoenix/express-twitter-auth/issues"
+  },
+  "homepage": "https://github.com/attainu-phoenix/express-twitter-auth#readme"
+}

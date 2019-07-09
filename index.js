@@ -1,13 +1,14 @@
 'use strict';
 
 var express = require('express'),
-jwt = require('jsonwebtoken'),
-expressJwt = require('express-jwt'),
-router = express.Router(),
-cors = require('cors'),
-bodyParser = require('body-parser'),
-request = require('request'),
-config = require('./config.js');
+	jwt = require('jsonwebtoken'),
+	expressJwt = require('express-jwt'),
+	router = express.Router(),
+	cors = require('cors'),
+	bodyParser = require('body-parser'),
+	request = require('request'),
+	twitter = require("twitter"),
+	config = require('./config.js');
 
 var app = express();
 
@@ -63,7 +64,8 @@ app.post('/auth/twitter/request', function(req, res) {
 	});
 });
 
-app.post('/auth/twitter/login', function(req, res, next) {
+// Signin the user and generate the token
+app.post('/auth/twitter/login', function(req, res) {
 	request.post({
 		url: `https://api.twitter.com/oauth/access_token?oauth_verifier`,
 		oauth: {
@@ -82,5 +84,44 @@ app.post('/auth/twitter/login', function(req, res, next) {
 		res.json(parsedBody);
 	});
 });
+
+
+// Creates a tweet
+app.post('/twitter/post', function(req, res) {
+	var client = new twitter({
+		consumer_key: req.body.consumer_key,
+  		consumer_secret: req.body.consumer_secret,
+  		access_token_key: req.body.access_token_key,
+  		access_token_secret: req.body.access_token_secret
+	});
+	client.post(
+		'statuses/update',
+		{status: req.body.status},
+		function(err, tweet, response) {
+			if(err) return res.status(500).end();
+			res.json(tweet)
+		}
+	);
+});
+
+
+// Deletes a tweet
+app.delete('/twitter/post/:id', function(req, res) {
+	var client = new twitter({
+		consumer_key: req.body.consumer_key,
+  		consumer_secret: req.body.consumer_secret,
+  		access_token_key: req.body.access_token_key,
+  		access_token_secret: req.body.access_token_secret
+	});
+	client.post(
+		'statuses/destroy/' + req.params.id,
+		function(err, tweet, response) {
+			console.log(err)
+			if(err) return res.status(500).end();
+			res.json(tweet)
+		}
+	);
+});
+
 
 app.listen(process.env.PORT || 4444);
